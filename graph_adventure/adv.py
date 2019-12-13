@@ -21,7 +21,50 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+traversalPath = []
+
+directions = {'n':'s', 's':'n', 'e':'w', 'w':'e'}
+
+rooms = {}
+previous_direction = [None]
+visited = {}
+
+rooms[0] = player.currentRoom.getExits()
+visited[0] = player.currentRoom.getExits()
+
+while len(rooms) < len(roomGraph) - 1:
+    # print(player.currentRoom, player.currentRoom.id)
+    # print('previous direction', previous_direction)
+    # print('rooms', rooms)
+    # print('current room', player.currentRoom)
+    if player.currentRoom.id not in rooms:
+        rooms[player.currentRoom.id] = player.currentRoom.getExits()
+        visited[player.currentRoom.id] = player.currentRoom.getExits()
+        last_direction = previous_direction[-1]
+        # print('current room', player.currentRoom)
+        # print('previous direction', previous_direction)
+        visited[player.currentRoom.id].remove(last_direction)
+        # print('rooms', rooms)
+        # print('visited', visited)
+        # print('length', len(visited[player.currentRoom.id]))
+
+    while len(visited[player.currentRoom.id]) < 1:
+        reverse = previous_direction.pop()
+        traversalPath.append(reverse)
+        player.travel(reverse)
+
+    exit_direction = visited[player.currentRoom.id].pop(0)
+    # print('exit direction', exit_direction)
+    # print('traversal path', traversalPath)
+    traversalPath.append(exit_direction)
+    previous_direction.append(directions[exit_direction])
+    player.travel(exit_direction)
+
+# world.printRooms()
+
+# print('rooms', rooms)
+# print('visited', visited)
+# print('path', traversalPath)
 
 
 # TRAVERSAL TEST
